@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- <script src="maplibre-gl.js"></script> -->
+        <!-- <link rel="stylesheet" href="maplibre-gl.css"> -->
+
+        <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=diversity_1&local_police" />
+
+        <link rel="stylesheet" href="https://unpkg.com/uplot@1.6.31/dist/uPlot.min.css" />
+        <script src="https://unpkg.com/uplot@1.6.31/dist/uPlot.iife.min.js"></script>
+
+        <title>Data Science Project</title>
+</head>
+
+<body>
+        <main>
+                <div id="map"></div>
+                <div class="stepholder">
+                        <header class="step-titles">
+                                <h1 class="step-1-title active-step-title">Welcome</h1>
+                                <h1 class="step-2-title">Raw pullover data</h1>
+                                <h1 class="step-3-title">Population and pullover gradients</h1>
+                                <h1 class="step-4-title">Vehicle search probability</h1>
+                                <h1 class="step-5-title"
+                                        id="2020-Pullover-Rates-in-New-York-City-An-Analysis-of-Traffic-Stop-Disparities">
+                                        2020 Pullover Rates in New York City: An Analysis of Traffic
+                                        Stop Disparities</h1>
+                                <h1 class="step-6-title">Conclusion</h1>
+                        </header>
+                        <div class="step-contents">
+                                <section class="step step-1 active-step">
+                                        <p>This is your interactive journey into understanding systematic racism through
+                                                a dynamic map visualization of pullover statistics in New York. As you
+                                                engage with this interactive map, you will explore the geographic
+                                                distribution of traffic stops, revealing how law enforcement practices
+                                                disproportionately impact marginalized communities across the city.</p>
+
+                                        <p>As you navigate through the map, you’ll uncover data that highlights
+                                                disparities in pullover rates based on race and ethnicity. Furthermore,
+                                                the experience is divided into distinct steps each presenting new piece
+                                                of information, building atop of the previous one. </p>
+
+                                        <p>This project invites you to interact with the data, providing a deeper
+                                                context for understanding the implications of these practices on
+                                                community trust and safety.
+                                        </p>
+
+                                        <p>Join us on this journey as you uncover the realities behind the numbers,
+                                                fostering awareness and dialogue about the urgent need for reform in our
+                                                justice system. Together, we can work towards a future where equity and
+                                                justice are accessible to all, and where the map reflects a society free
+                                                from the shadows of systemic racism.</p>
+                                        <p>Take the next step.</p>
+                                </section>
+                                <section class="step step-2">
+                                        <p>We’d first like to start with the raw data. The data set for analysis was
+                                                tanken from New York city <a href="https://opendata.cityofnewyork.us/"
+                                                        target="_blank" rel="noopener">open data bank</a>,
+                                                which provides a free public data. The data for analysis is police
+                                                incident level data documenting
+                                                vehicular stops. It is collected under New York City Administrative Code
+                                                14-191 and is used to gain
+                                                insight into police-initiated vehicle stops, demographics of people
+                                                stopped, details of vehicles
+                                                involved and resulting action of stops.</p>
+                                        <p>The data set has several metrics:</p>
+                                        <ul>
+                                                <li>Race and sex of pulled over individual</li>
+                                                <li>Timestamp of the stop</li>
+                                                <li>Vehicle type</li>
+                                        </ul>
+                                        <p>as well as note if something from the following list occured:</p>
+                                        <ul>
+                                                <li>Vehicle seizure</li>
+                                                <li>Force usage</li>
+                                                <li>Vehicle search occurance</li>
+                                                <li>Arrest made</li>
+                                        </ul>
+                                        <p>The data for the table is taken from police reports. Some of the fields there
+                                                are not mandatory to fill.
+                                                Thus, there exist records with missing data that have to be processed.
+                                        </p>
+                                </section>
+                                <section class="step step-3">
+                                        <p>Here we show the race distribution of the population across all of the
+                                                districts within the New York city.</p>
+                                        <p>The color distribution denotes the race distribution as follows:</p>
+                                        <ul>
+                                                <li>Blue - White</li>
+                                                <li>Black - Black</li>
+                                                <li>Red - Hispanic</li>
+                                                <li>Green - Asian</li>
+                                                <li>Purple - Hawaiian</li>
+                                                <li>Cyan - American Indian</li>
+                                                <li>Yellow - Other</li>
+                                        </ul>
+                                        <p>Additionally, we provide the gradient map that highlights the relationship
+                                                between
+                                                pullover statistics and district areas. The map functionality allows to
+                                                select the particular city block of the neighbourhood which will yield
+                                                the race statistical distribution.</p>
+                                        <input type="checkbox" id="pop-pull-toggle" class="toggleCheckbox" />
+                                        <label for="pop-pull-toggle" class='toggleContainer'>
+                                                <div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                                                viewBox="0 -960 960 960" width="24px">
+                                                                <path
+                                                                        d="M40-160v-160q0-34 23.5-57t56.5-23h131q20 0 38 10t29 27q29 39 71.5 61t90.5 22q49 0 91.5-22t70.5-61q13-17 30.5-27t36.5-10h131q34 0 57 23t23 57v160H640v-91q-35 25-75.5 38T480-200q-43 0-84-13.5T320-252v92H40Zm440-160q-38 0-72-17.5T351-386q-17-25-42.5-39.5T253-440q22-37 93-58.5T480-520q63 0 134 21.5t93 58.5q-29 0-55 14.5T609-386q-22 32-56 49t-73 17ZM160-440q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T280-560q0 50-34.5 85T160-440Zm640 0q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T920-560q0 50-34.5 85T800-440ZM480-560q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-680q0 50-34.5 85T480-560Z" />
+                                                        </svg>
+                                                        Census race
+                                                </div>
+                                                <div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                                                viewBox="0 -960 960 960" width="24px">
+                                                                <path
+                                                                        d="m368-336 112-84 110 84-42-136 112-88H524l-44-136-44 136H300l110 88-42 136ZM480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z" />
+                                                        </svg>
+                                                        Pullover race
+                                                </div>
+                                        </label>
+                                        <p>From our analysis, it is evident that the prevailed pullovers happen with
+                                                participation of people of “Black” and “Hispanic” races. Particularly,
+                                                within the central districts of the city.</p>
+                                        <p>Notably, the percentage of pullovers of mentioned races <strong>is
+                                                        high</strong> in the neighborhoods where the majority population
+                                                is of “White” race, compared to the opposite case. For example,
+                                                according to the demographic profile of Manhattan, the prevalent
+                                                population proportion is identified as “White”. At the same time, the
+                                                analysis shows that the majority of pullovers in this area is associated
+                                                with individuals who identify themselves as “Hispanic” and “Black”.</p>
+
+                                </section>
+                                <section class="step step-4">
+                                        In this step you will get info on how likely you are to getting pulled over
+                                        Fill out the data about yourself and select on the map your chance of having
+                                        your car searched in case you get pulled over.
+                                        <div class="search-chance-form">
+                                                <h2>Car search chance details</h2>
+                                                <form onsubmit="handleCheckSearch(event)">
+                                                        <label for="bct2020">Borough struct code (click the map to
+                                                                select)</label>
+                                                        <input disabled type="number" id="bct2020" name="bct2020"
+                                                                required>
+
+                                                        <label for="occur_tm">Occurrence Time:</label>
+                                                        <input type="time" id="occur_tm" name="occur_tm" required>
+
+                                                        <label for="veh_category">Vehicle Category:</label>
+                                                        <select id="veh_category" name="veh_category">
+                                                                <option value="1">CAR/SUV</option>
+                                                                <option value="0">BIKE</option>
+                                                                <option value="4">TLC</option>
+                                                                <option value="2">MCL</option>
+                                                                <option value="3">OTHER</option>
+                                                                <option value="5">TRUCK/BUS</option>
+                                                        </select>
+
+                                                        <label for="rpted_age">Reported Age:</label>
+                                                        <input type="number" id="rpted_age" name="rpted_age" min="18"
+                                                                max="99" required>
+
+                                                        <label for="sex_cd">Sex:</label>
+                                                        <select id="sex_cd" name="sex_cd">
+                                                                <option value="0">Female</option>
+                                                                <option value="1">Male</option>
+                                                        </select>
+
+                                                        <label for="race_desc">Race Description:</label>
+                                                        <select id="race_desc" name="race_desc">
+                                                                <option value="5">WHITE</option>
+                                                                <option value="2">BLACK</option>
+                                                                <option value="1">ASIAN / PACIFIC
+                                                                        ISLANDER</option>
+                                                                <option value="3">HISPANIC</option>
+                                                                <option value="0">AMERICAN
+                                                                        INDIAN/ALASKAN NATIVE</option>
+                                                                <option value="4">OTHER</option>
+                                                        </select>
+
+                                                        <input type="submit" value="Check the chance">
+                                                </form>
+                                        </div>
+                                        <div class="prediction-result-container">
+                                                Your chance of your vehicle searched is: <span
+                                                        id="prediction-score"></span>
+                                        </div>
+                                </section>
+
+                                <section class="step step-5">
+                                        <div id="doc" class="markdown-body container-fluid">
+                                                <p>The aim of this study is to analyze disparities in traffic stop rates
+                                                        across different racial groups in New York City during 2020 by
+                                                        using data from NYPD Vehicle Stop Reports. In order to shed
+                                                        light on potential systemic disparities in traffic enforcement
+                                                        procedures, the research aims to detect and quantify racial
+                                                        variations in pullover rates.</p>
+                                                <h1
+                                                        id="2020-pullover-rates-in-new-york-city-an-analysis-of-traffic-stop-disparities">
+                                                        2020 Pullover Rates in New York City: An Analysis of Traffic
+                                                        Stop Disparities</h1>
+                                                <p>The aim of this study is to analyze disparities in traffic stop rates
+                                                        across different racial groups in New York City during 2020 by
+                                                        using data from NYPD Vehicle Stop Reports. In order to shed
+                                                        light on potential systemic disparities in traffic enforcement
+                                                        procedures, the research aims to detect and quantify racial
+                                                        variations in pullover rates.</p>
+                                                <h1 id="1.-data-collection">1. Data Collection</h1>
+                                                <p>The dataset used in this study was obtained from the <a
+                                                                href="https://data.cityofnewyork.us/Public-Safety/NYPD-Vehicle-Stop-Reports/hn9i-dwpr/about_data">NYPD
+                                                                Vehicle Stop Reports</a>, which are publicly available
+                                                        at NYC OpenData. The dataset included variables such as
+                                                        EVNT<em>KEY, OCCUR</em>DT, OCCUR<em>TM, RACE</em>DESC, and
+                                                        ARREST<em>MADE</em>FLG, among others.</p>
+                                                <p>To provide context for analyzing traffic stop rates by racial group,
+                                                        more demographic data was acquired from the <a
+                                                                href="https://www.nyc.gov/site/planning/data-maps/open-data/census-download-metadata.page">New
+                                                                York City Department of City Planning</a>.</p>
+                                                <h1 id="2.-data-cleaning-and-preparation">2. Data Cleaning and
+                                                        Preparation</h1>
+                                                <p>The dataset was cleaned to handle missing or inconsistent values, in
+                                                        particular for key columns like RACE_DESC. </p>
+                                                <p>Columns with missing values for RACE<em>DESC and locations (which we
+                                                                later matched to boroct2020) were eliminated, and value
+                                                                imputation was carried out for RPTED</em>AGE (age) and
+                                                        SEX_CD (sex). </p>
+                                                <p>Given that the research focuses on racial differences in pullover
+                                                        rates, it was decided to eliminate rows that missed racial
+                                                        information. To preserve these rows, imputations would have been
+                                                        necessary, and these could introduce errors, especially if
+                                                        people were assigned to neighborhoods or racial groups that are
+                                                        not their majority. This could significantly skew the results.
+                                                </p>
+                                                <p>Data cleaning and preparation was not necessary for the columns
+                                                        related to vehicle searches (VEH<em>SEARCHED</em>FLG), arrests
+                                                        (ARREST<em>MADE</em>FLG), vehicle seizures
+                                                        (VEH<em>SEIZED</em>FLG), checkpoint flag
+                                                        (VEH<em>CHECKPOINT</em>FLG), consent for search
+                                                        (VEH<em>SEARCH</em>CONSENT<em>FLG), force used
+                                                                (FORCE</em>USED<em>FLG), or summons issued
+                                                                (SUMMON</em>ISSUED_FLG). Moreover, there were no
+                                                        duplicate entries in the data.</p>
+                                                <p>Latitude, longitude, and X&#47;Y coordinates were included in the
+                                                        pullover data. To guarantee accurate geographic assignment and
+                                                        statistics, these coordinates were subsequently cross-referenced
+                                                        with borough locations (boroct2020) from the NYC Department of
+                                                        City Planning Census data.</p>
+                                                <h1 id="3.-data-analysis">3. Data Analysis</h1>
+                                                <h2 id="3.1-demographic-analysis">3.1 Demographic Analysis:</h2>
+                                                <p><img src="https://hedgedoc.kuchta.dev/uploads/3e88b813-13fc-4cce-8da1-0a82223ce2ad.png"
+                                                                alt="" /></p>
+                                                <p><img src="https://hedgedoc.kuchta.dev/uploads/4de338f2-544b-4f9c-b5a6-3de035e94e52.png"
+                                                                alt="" /></p>
+                                                <p><img src="https://hedgedoc.kuchta.dev/uploads/e3801ce1-b461-434d-bdb3-ee773de39666.png"
+                                                                alt="" /></p>
+                                                <p><img src="https://hedgedoc.kuchta.dev/uploads/2b126dad-5a35-4629-a2dd-bd3d4b78513f.png"
+                                                                alt="" /></p>
+                                                <h2 id="3.2-correlation-between-flags">3.2 Correlation Between Flags:
+                                                </h2>
+                                                <pre><code>Point-biserial correlation between Age and Vehicle Searched
+                                                                Flag: -0.091, p-value: 0.000
+                                                        </code></pre>
+                                                <p>Younger drivers are somewhat more likely to be searched, but this
+                                                        effect is not significant, according to the point-biserial
+                                                        correlation (-0.091) between age and vehicle search.</p>
+                                                <pre><code>Cramér&#39;s V between Race and Vehicle Searched Flag: 0.109
+                                                        </code></pre>
+                                                <p>A value of 0.109 indicates a weak association between race and
+                                                        vehicle searches, suggesting that race has some influence on
+                                                        whether a vehicle is searched, but it is not a strong predictor
+                                                        by itself.</p>
+                                                <p>focusing specifically on instances where force was used:</p>
+                                                <pre><code>Percentage of cases where force was used and an arrest was
+                                                                made: 94.06%</code></pre>
+                                                <pre><code>Percentage of cases where force was used but no arrest was
+                                                                made: 5.94%</code></pre>
+
+                                                <p>Use of force is highly likely to result in an arrest, as evidenced by
+                                                        the high conditional probability of an arrest given force was
+                                                        used (94.06%). This suggests that force is used selectively in
+                                                        situations where an arrest is almost inevitable</p>
+                                                <h1 id="key-findings">Key Findings</h1>
+                                                <p>Our dataset, used for machine learning and data analysis, includes
+                                                        820,888 traffic stops. These incidents involved a range of
+                                                        diverse outcomes:
+                                                        - Vehicle searches were conducted in approximately 21161 cases.
+                                                        - Vehicles were seized in around 10741 cases.
+                                                        - Force was used in 588 cases.
+                                                        - Arrests were made in about 26744 incidents.
+                                                        - Tickets or summons were issued in 505917 stops.</p>
+                                                <p>Black and Latinx drivers were disproportionately represented in
+                                                        traffic stops:
+                                                        - Black drivers accounted for 31.32% of the stops.
+                                                        - Latinx drivers accounted for 31.05% of the stops.
+                                                        - White drivers accounted for only 22.62% of the total stops.
+                                                </p>
+                                                <p>Arrests also showed a racial disparity:
+                                                        - 45.54% of individuals arrested during traffic stops were
+                                                        Black.
+                                                        - 41.24% of individuals arrested were Latinx.</p>
+                                                <p>Search rates further highlight these disparities:
+                                                        - Black drivers were searched at a rate roughly 11.34 times
+                                                        higher than White drivers.
+                                                        - Latinx drivers were searched at a rate about 6.47 times
+                                                        greater than their White counterparts.</p>
+                                        </div>
+                                </section>
+
+                                <section class="step step-6">
+                                        <p>
+                                                This project is intended to highlight the problem of racism for
+                                                authorities as well as for community in general. Interactive journey
+                                                throughout the pullover statistics in the New York city serves is a
+                                                powerful tool for understanding the complexities of systematic racism
+                                                within law enforcement practices. As one can see from our research,
+                                                there exists disproportionate impact of traffic stops on certain groups
+                                                of minorities. Our analysis outlines the disparities in pullover rates
+                                                of individuals who refer themselves as "Black" or "Hispanic". Based on
+                                                our data, we can conlude that the justice system of the New York city
+                                                has to experience urgent reformations and and corrections. We have put a
+                                                lot of effort into making the visualization and data analysis as
+                                                compelling as possible. Everything is publicly available as a GitHub
+                                                repository <a
+                                                        href="https://github.com/Kuchteq/data-science-course">https://github.com/Kuchteq/data-science-course</a>.
+
+                                        </p>
+                                </section>
+                        </div>
+                        <div class="stepbuttons">
+                                <button id="previous-button" type="button">Previous step</button>
+                                <button id="next-button" type="button">Next step</button>
+                        </div>
+                </div>
+                <div class="progress-container">
+                        <div class="progress" id="progress"></div>
+                        <div class="progress-bg"></div>
+                        <div class="circle active" id="step-1">1</div>
+                        <div class="circle" id="step-2">2</div>
+                        <div class="circle" id="step-3">3</div>
+                        <div class="circle" id="step-4">4</div>
+                        <div class="circle" id="step-5">5</div>
+                        <div class="circle" id="step-6">6</div>
+                </div>
+                <div class="detail-side no-display">
+                        <button class="close-detail-button">&times;</button>
+                        <div id="output"></div>
+                </div>
+        </main>
+</body>
+<script src="styles.js"></script>
+<script src="index.js"></script>
+
+</html>

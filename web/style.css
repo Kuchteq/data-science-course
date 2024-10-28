@@ -1,0 +1,345 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap');
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+body {
+  line-height: 1.5;
+  font-family: "Libre Franklin", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+#root, #__next {
+  isolation: isolate;
+}
+
+/* SCROLL BAR STUFF For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+    border-radius: 10px; /* Rounded corners for the track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #272727; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the thumb on hover */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin; /* Makes the scrollbar thin */
+    scrollbar-color: #272727 #f1f1f1; /* Thumb color and track color */
+}
+
+
+
+
+
+.no-display {
+        display:none;
+}
+
+#map {
+        width:100%;
+        height:100vh;
+}
+
+
+.step {
+        position:absolute;
+        top:0;
+        padding:0 1rem;
+        opacity:0;
+        visibility:hidden;
+        transition: all 0.3s ease;
+        p {
+                padding-bottom:1rem;
+        }
+        h1 {
+                margin-bottom:1rem;
+                font-size:2rem;
+        }
+}
+.active-step {
+        opacity:1;
+        visibility:visible;
+}
+.stepholder
+{
+        display:flex;
+        border:1px solid #272727;
+        flex-direction:column;
+        position:absolute;
+        width:30%;
+        height:70vh;
+        top:0;
+        margin:1rem;
+        background:#ffffff;
+        border-radius:0.5rem;
+        transition: all 0.3s; /* Smooth color transition */
+}
+.stepholder-full {
+        height:90vh;
+        width:98vw;
+
+        .step-5, .step-6 {
+                width:unset;
+                height:unset;
+                overflow:hidden;
+        }
+}
+.step-contents {
+        overflow-y:scroll;
+        position:relative;
+         flex-grow: 1;
+}
+.step-titles {
+        margin:0.5rem 1rem;
+        border-bottom:1px solid #272727;
+        h1 {
+                opacity:0;
+                display:none;
+        }
+        .active-step-title {
+                opacity:1;
+                display:block;
+        }
+}
+
+.step-4 {
+        padding-bottom:8rem;
+}
+.step-5, .step-6 {
+        width:0%;
+        height:0%;
+        overflow:hidden;
+}
+.prediction-result-container {
+        border:1px solid #000;
+        padding: 1rem;
+        border-radius:0.5rem;
+}
+#prediction-score {
+        font-weight: bold;
+}
+.stepbuttons {
+        display:flex;
+        flex-direction: row;
+        button {
+                width:50%;
+                border:none;
+                height:2rem;
+                background-color:#272727;
+                color:#ffffff;
+                &:hover {
+                        cursor: pointer;
+                        background-color:#474747;
+                }
+                &:nth-child(1) {
+                        border-right:1px solid #fff;
+                        border-radius:0 0 0 0.5rem;
+                }
+                &:nth-child(2) {
+                        border-radius:0 0 0.5rem 0;
+                }
+        }
+}
+
+
+
+
+
+
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    width: 100%;
+    max-width: 600px;
+    bottom:1rem;
+    left:50%;
+    transform:translate(-50%,0);
+}
+
+.circle {
+    background-color: #333;
+    font-weight:bold;
+    color: white;
+    border-radius: 50%;
+    height: 50px;
+  
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.circle.active {
+
+    background-color: #fff;
+    color:#000;
+    border: 3px solid #000;
+}
+
+.progress {
+    position: absolute;
+    width:0;
+    top: 55%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #fff;
+    z-index: 0;
+    transform: translateY(-50%);
+}
+
+.progress-bg { 
+    position: absolute; 
+    top: 50%; 
+    left: 0; 
+    width: 100%; 
+    height: 5px;
+    background-color: #333;
+    z-index: -1;
+} 
+
+.detail-side {
+        position:absolute;
+        top: 0;
+        margin: 1rem;
+        right: 0;
+        padding:0 1rem;
+        border: 1px solid #333;
+        background:#fff;
+        border-radius:0.5rem;
+}
+.close-detail-button {
+        position:absolute;
+        top:-1rem;
+        right:0;
+    background-color: transparent; /* No background */
+    border: none; /* No border */
+    color: #000000; /* Red color */
+    font-size: 3rem; /* Size of the X */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+.close-detail-button:hover {
+    color: #888888; /* Darker red on hover */
+}
+
+/* Nice looking toggle button from: https://hudecz.medium.com/how-to-create-a-pure-css-toggle-button-2fcc955a8984 */
+.toggleContainer {
+   position: relative;
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   width: fit-content;
+   border: 3px solid #343434;
+   border-radius: 0.5rem;
+   background: #343434;
+   font-weight: bold;
+   color: #343434;
+   cursor: pointer;
+   margin: 1rem auto;
+ }
+ .toggleContainer::before {
+   content: '';
+   position: absolute;
+   width: 50%;
+   height: 100%;
+   left: 0%;
+   border-radius:0.5rem;
+   background: white;
+   transition: all 0.1s;
+ }
+ .toggleCheckbox:checked + .toggleContainer::before {
+    left: 50%;
+ }
+ .toggleContainer div {
+   padding: 6px;
+   text-align: center;
+   z-index: 1;
+ }
+ .toggleCheckbox {
+   display: none;
+ }
+ .toggleCheckbox:checked + .toggleContainer div:first-child{
+   color: white;
+   fill: white;
+   transition: color 0.1s;
+ }
+ .toggleCheckbox:checked + .toggleContainer div:last-child{
+   color: #343434;
+   fill:  #343434;
+   transition: color 0.1s;
+ }
+ .toggleCheckbox + .toggleContainer div:first-child{
+   color: #343434;
+   display:flex;
+   transition: color 0.1s;
+ }
+ .toggleCheckbox + .toggleContainer div:last-child{
+   color: white;
+   fill: white;
+   display:flex;
+   transition: color 0.1s;
+ }
+
+
+.search-chance-form {
+         max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, input[type="number"], input[type="date"], input[type="time"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition:all 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #333;
+        }
+}
